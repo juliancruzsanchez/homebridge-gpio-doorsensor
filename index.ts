@@ -18,5 +18,5 @@ module.exports = function (homebridge) {
   SwitchPort.init(exportTypes);
   GPIOGarageDoorAccessory.init(exportTypes);
 
-  homebridge.registerAccessory("homebridge-gpio-garagedoor", "GPIOGarageDoor", GPIOGarageDoorAccessory);
+  homebridge.registerAccessory("homebridge-gpio-doorSensor", "GPIODoorSensor", GPIOGarageDoorAccessory);
 };
