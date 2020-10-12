@@ -8,7 +8,6 @@ import GPIO = require("onoff");
 import {getCurrentDoorStateDescription} from "./DoorStateExtension";
 import {changeBase} from "./Runtime";
 import DoorSensorPort from "./DoorSensorPort";
-import SwitchPort from "./SwitchPort";
 
 var Accessory, Service, Characteristic, uuid;
 
@@ -16,7 +15,6 @@ export default class GPIOGarageDoorAccessory {
 	private log;
 	private name: string;
 	private doorSensor: DoorSensorPort;
-	private doorSwitch: SwitchPort;
 
 	// Base class methods
 	private addService: (any) => any;
@@ -29,13 +27,12 @@ export default class GPIOGarageDoorAccessory {
 		Service = exportTypes.Service;
 		Characteristic = exportTypes.Characteristic;
 		uuid = exportTypes.uuid;
-
 		changeBase(GPIOGarageDoorAccessory, Accessory);
 	}
 
 	constructor(log, config) {
 		var name = config["name"];
-		var id = uuid.generate('gpio-garagedoor.' + (config['id'] || this.name));
+		var id = uuid.generate('gpio-doorsensor.' + (config['id'] || this.name));
 		Accessory.call(this, name, id);
 		this.uuid_base = id;
 		this.name = name;
@@ -50,22 +47,6 @@ export default class GPIOGarageDoorAccessory {
 			log("Is NC Sensor: " + isNCSensor);
 			this.doorSensor = new DoorSensorPort(doorSensorPin, garageDoorOpener, log, isNCSensor);
 		}
-
-		var doorSwitchPin = config["doorSwitchPin"];
-		log("Door Switch Pin: " + doorSwitchPin);
-		var doorOpensInSeconds = config["doorOpensInSeconds"];
-		log("Door Opens (in seconds): " + doorOpensInSeconds);
-		if (doorSwitchPin) {
-			this.doorSwitch = new SwitchPort(doorSwitchPin, garageDoorOpener, log, this.doorSensor, doorOpensInSeconds);
-		}
-
-		garageDoorOpener.getCharacteristic(Characteristic.CurrentDoorState)
-			.on('change', function (change) {
-				log("Garage Door state changed to " + getCurrentDoorStateDescription(change.newValue));
-			});
-
-		this.getService(Service.AccessoryInformation)
-			.setCharacteristic(Characteristic.Model, "GPIO Garage Door");
 	}
 
 	getServices(): any {
