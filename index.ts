@@ -1,7 +1,6 @@
 /// <reference path="./typings/globals/node/index.d.ts" />
 
 import DoorSensorPort from "./lib/DoorSensorPort";
-import SwitchPort from "./lib/SwitchPort";
 import GPIOGarageDoorAccessory from "./lib/GPIOGarageDoorAccessory";
 import DoorStateExtension from "./lib/DoorStateExtension";
 
@@ -15,7 +14,6 @@ module.exports = function (homebridge) {
 
   DoorStateExtension.init(exportTypes);
   DoorSensorPort.init(exportTypes);
-  SwitchPort.init(exportTypes);
   GPIOGarageDoorAccessory.init(exportTypes);
 
   homebridge.registerAccessory("homebridge-gpio-doorSensor", "GPIODoorSensor", GPIOGarageDoorAccessory);
